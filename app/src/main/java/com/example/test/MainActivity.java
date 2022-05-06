@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     private EditText user_field;
     private Button main_btn;
     private TextView result_info;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     String country = user_field.getText().toString();
                     String url = "https://date.nager.at/api/v3/CountryInfo/" + country;
+
                     new GetURLData().execute(url);
                 }
             }
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPreExecute() {
             super.onPreExecute();
-            result_info.setText("Ожидайте...");
+            result_info.setText("Loading...");
         }
 
         @Override
@@ -107,14 +108,52 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 JSONObject jsonObject = new JSONObject(result);
-                Log.i("MainActivity", result);
-                Log.i("MainActivity", "Страна: " + jsonObject.getString("officialName"));
-                Log.i("MainActivity", "Регион: " + jsonObject.getString("region"));
-                Log.i("MainActivity", "Границы: " + String.valueOf(jsonObject.getJSONArray("borders")));
+
+                Response res = new Response(jsonObject);
+
+                Log.i("response: country", res.getCountry());
+                Log.i("response: region", res.getRegion());
+                Log.i("response: neighbours", res.getCountryBorderStr());
+
+                result_info.setText("Country: " + res.getCountry() + "\nRegion: " + res.getRegion() + "\nNeighbours: " + res.getCountryBorderStr());
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static class Response {
+        private String country;
+        private String region;
+        private JSONArray borders;
+
+        public Response(JSONObject jo) throws JSONException {
+            this.country = jo.getString("officialName");
+            this.region = jo.getString("region");
+            this.borders = jo.getJSONArray("borders");
+        }
+
+        void setCountry(String country) {this.country = country;}
+        void setRegion(String region) {this.region = region;}
+        void setBorders(JSONArray borders) {this.borders = borders;}
+
+        String getCountry() {return country;}
+        String getRegion() {return region;}
+        String[] getCountryBorder() throws JSONException {
+            String[] country_border = new String[borders.length()];
+            for(int i = 0; i < borders.length(); i++) {
+                country_border[i] =  borders.getJSONObject(i).getString("officialName");
+            }
+            return country_border;
+        }
+        String getCountryBorderStr() throws JSONException {
+            String country_border = "";
+            for(int i = 0; i < borders.length(); i++) {
+                country_border += borders.getJSONObject(i).getString("officialName");
+                if(i != borders.length() - 1) country_border += ", ";
+            }
+            return country_border;
         }
     }
 }

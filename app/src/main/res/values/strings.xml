@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">test</string>
-    <string name="logo">Информация о стране</string>
-    <string name="hint_user_field">Введите код страны</string>
-    <string name="main_btn">Узнать</string>
-    <string name="no_user_input">Введите текст</string>
+    <string name="logo">Country information</string>
+    <string name="hint_user_field">Enter country code</string>
+    <string name="main_btn">get</string>
+    <string name="no_user_input">Enter text</string>
 </resources>
