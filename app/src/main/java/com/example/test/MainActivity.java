@@ -3,6 +3,7 @@ package com.example.test;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,9 +38,9 @@ public class MainActivity extends AppCompatActivity {
 
         user_field = findViewById(R.id.user_field);
         main_btn = findViewById(R.id.main_btn);
-        result_info = findViewById(R.id.result_info);
+   //     result_info = findViewById(R.id.result_info);
 
-        main_btn.setOnClickListener(new View.OnClickListener() {
+     /*   main_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(user_field.getText().toString().trim().equals(""))
@@ -51,11 +52,26 @@ public class MainActivity extends AppCompatActivity {
                     new GetURLData().execute(url);
                 }
             }
+        });*/
+        setTitle("CountryInfo");
+        main_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(user_field.getText().toString().trim().equals(""))
+                    Toast.makeText(MainActivity.this, R.string.no_user_input, Toast.LENGTH_LONG).show();
+                else {
+                    Intent intent = new Intent(getApplicationContext(), SecondActivity.class);
+
+                    String country = user_field.getText().toString();
+                    intent.putExtra("country", country);
+                    startActivity(intent);
+                }
+            }
         });
 
     }
 
-    private class GetURLData extends AsyncTask<String, String, String> {
+  /*  private class GetURLData extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
             super.onPreExecute();
@@ -121,39 +137,5 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
-
-    public static class Response {
-        private String country;
-        private String region;
-        private JSONArray borders;
-
-        public Response(JSONObject jo) throws JSONException {
-            this.country = jo.getString("officialName");
-            this.region = jo.getString("region");
-            this.borders = jo.getJSONArray("borders");
-        }
-
-        void setCountry(String country) {this.country = country;}
-        void setRegion(String region) {this.region = region;}
-        void setBorders(JSONArray borders) {this.borders = borders;}
-
-        String getCountry() {return country;}
-        String getRegion() {return region;}
-        String[] getCountryBorder() throws JSONException {
-            String[] country_border = new String[borders.length()];
-            for(int i = 0; i < borders.length(); i++) {
-                country_border[i] =  borders.getJSONObject(i).getString("officialName");
-            }
-            return country_border;
-        }
-        String getCountryBorderStr() throws JSONException {
-            String country_border = "";
-            for(int i = 0; i < borders.length(); i++) {
-                country_border += borders.getJSONObject(i).getString("officialName");
-                if(i != borders.length() - 1) country_border += ", ";
-            }
-            return country_border;
-        }
-    }
+    }*/
 }

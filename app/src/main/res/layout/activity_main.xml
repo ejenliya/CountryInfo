@@ -41,15 +41,4 @@
         android:layout_marginHorizontal="130sp"
         android:backgroundTint="@color/purple_200"
         android:text="@string/main_btn"/>
-
-    <TextView
-        android:id="@+id/result_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50sp"
-        android:layout_below="@id/main_btn"
-        android:fontFamily="@font/montserrat_bold"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="20sp" />
 </RelativeLayout>
