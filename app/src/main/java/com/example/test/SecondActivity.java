@@ -2,6 +2,7 @@ package com.example.test;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.widget.ListAdapter;
@@ -28,15 +29,15 @@ import com.android.volley.toolbox.Volley;
 
 public class SecondActivity extends AppCompatActivity {
 
-    ListView listView;
-    ListAdapter adapter;
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
-        listView = findViewById(R.id.info);
+        recyclerView = findViewById(R.id.info);
         Bundle arguments = getIntent().getExtras();
 
         String country = arguments.getString("country");
@@ -59,10 +60,8 @@ public class SecondActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        adapter = new MyAdapter(this, info, R.layout.list_item_row,
-                new String[]{"country", "code", "region"},
-                new int[]{R.id.country, R.id.code, R.id.region});
+        adapter = new MyAdapter(this, info);
 
-        listView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);
     }
 }
