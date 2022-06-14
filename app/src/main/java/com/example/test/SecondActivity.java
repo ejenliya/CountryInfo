@@ -3,6 +3,7 @@ package com.example.test;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import android.os.Bundle;
 import android.widget.ListAdapter;
@@ -14,6 +15,8 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.Executors;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ListAdapter;
@@ -56,6 +59,25 @@ public class SecondActivity extends AppCompatActivity {
             res = new Response(jsonResponse);
             setTitle("borders of " + res.getCountry() + ", " + res.getRegion() + ":");
             info = res.getInfo();
+
+            for(int i = 0; i < info.size(); i++) {
+                HashMap<String, String> item = new HashMap<>();
+                item = info.get(i);
+
+                CountryItemDB database = Room.databaseBuilder(getApplicationContext(), CountryItemDB.class, "borders")
+                        .fallbackToDestructiveMigration()
+                        .build();
+
+                HashMap<String, String> finalItem = item;
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    CountryItem itemEntity = new CountryItem();
+                    itemEntity.country = finalItem.get("country");
+                    itemEntity.region = finalItem.get("region");
+                    itemEntity.code = finalItem.get("code");
+                    database.itemDAO().insertItem(itemEntity);
+                });
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
